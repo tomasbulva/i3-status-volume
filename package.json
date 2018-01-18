@@ -1,19 +1,19 @@
 {
-  "name": "i3-status-starter",
-  "version": "0.1.4",
-  "description": "Template for writing own modules for i3-status",
+  "name": "i3-status-volume",
+  "version": "0.1.0",
+  "description": "Volume module for i3-status",
   "main": "lib/index.js",
-  "url": "https://github.com/fehmer/i3-status-starter/issues",
+  "url": "https://github.com/tomasbulva/i3-status-volume/issues",
   "scripts": {
     "prepublish": "npm run compile",
     "compile": "babel src/ -d lib -s",
     "test": "npm run compile && node_modules/mocha/bin/mocha --compilers js:babel-register test --recursive --reporter gitlablist-mocha",
-    "watch": "npm run compile && (babel -w src/ -d lib -s &) && node_modules/mocha/bin/mocha --compilers js:babel-register test --recursive  --reporter min --watch",
+    "watch": "npm run compile && (babel -w src/ -d lib -s &)",
     "cover": "npm run compile && istanbul cover node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --colors --reporter dot test/ --recursive"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fehmer/i3-status-starter.git"
+    "url": "https://github.com/tomasbulva/i3-status-volume.git"
   },
   "babel": {
     "presets": [
@@ -26,9 +26,11 @@
     "i3-status",
     "i3block"
   ],
-  "author": "Christian Fehmer",
+  "author": "Tomas Bulva, Christian Fehmer",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "loudness": "*"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
