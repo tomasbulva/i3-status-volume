@@ -21,6 +21,7 @@ export default class Volume extends EventEmitter {
         var volumeMid = '<span font="Material-Design-Iconic-Font" size="large"></span>';
         var volumeHi = '<span font="Material-Design-Iconic-Font" size="large"></span>';
         var headphones = '<span font="Material-Design-Iconic-Font" size="large"></span>'; 
+        var error = '<span font="Material-Design-Iconic-Font" size="large"></span>';
 
         this.emit('pause', this);
 
@@ -39,29 +40,57 @@ export default class Volume extends EventEmitter {
                 return false;
             }
 
-            loudness.getVolume((err, vol) => {
-                // Done
-                var output = "";
+            if ( err ) {
+                logger.debug(err.message);
 
-                switch(true) {
-                    case (vol >= 80):
-                        output = volumeHi;
-                    break;
-                    case (vol < 80 && vol > 20):
-                        output = volumeMid;
-                    break;
-                    case (vol <= 20):
-                        output = volumeLow;
-                    break;
-                }
+                this.output.full_text = error;
+                this.output.short_text = error;
 
-                this.output.full_text = output;
-                this.output.short_text = output;
 
                 this.emit('resume', this);
                 this.emit('updated', this, this.output);
+            }
 
-            });
+            if ( ! mute && ! err ) {
+
+                loudness.getVolume((err, vol) => {
+                    
+                    if ( err ) {
+                        logger.debug(err.message);
+
+                        this.output.full_text = error;
+                        this.output.short_text = error;
+
+
+                        this.emit('resume', this);
+                        this.emit('updated', this, this.output);
+                    }
+                    else {
+                        
+                        var output = "";
+
+                        switch(true) {
+                            case (vol >= 80):
+                                output = volumeHi;
+                            break;
+                            case (vol < 80 && vol > 20):
+                                output = volumeMid;
+                            break;
+                            case (vol <= 20):
+                                output = volumeLow;
+                            break;
+                        }
+
+                        this.output.full_text = output;
+                        this.output.short_text = output;
+
+                        this.emit('resume', this);
+                        this.emit('updated', this, this.output);
+
+                    }
+
+                });
+            }
         });
     }
 
